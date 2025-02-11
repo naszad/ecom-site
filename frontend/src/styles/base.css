@@ -1,0 +1,62 @@
+:root {
+  /* Cyberpunk theme colors */
+  --bg-primary: #0a0b1e;
+  --bg-secondary: #12152b;
+  --bg-elevated: #1a1f3c;
+  --text-primary: #ffffff;
+  --text-secondary: #8f94b4;
+  --accent-primary: #00fff9;
+  --accent-secondary: #ff00ff;
+  --border-color: #2a3052;
+  --success-color: #00ff9f;
+  --error-color: #ff0055;
+  --warning-color: #ffbb00;
+  --neon-glow: 0 0 10px;
+  --grid-color: rgba(65, 232, 255, 0.1);
+}
+
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Rajdhani', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-primary);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-secondary);
+} 

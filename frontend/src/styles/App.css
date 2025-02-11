@@ -1,0 +1,127 @@
+@import './base.css';
+@import './utilities.css';
+@import './animations.css';
+
+/* App-specific layout styles */
+#root {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.page-content {
+  width: 100%;
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: var(--bg-secondary);
+  border-radius: 2px;
+  box-shadow: 0 8px 32px rgba(0, 255, 249, 0.15);
+  box-sizing: border-box;
+  border: 1px solid var(--accent-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.card {
+  width: 100%;
+  max-width: 800px;
+  padding: 2em;
+  background-color: var(--bg-secondary);
+  border-radius: 2px;
+  box-shadow: 0 4px 16px rgba(0, 255, 249, 0.15);
+  margin: 1rem auto;
+  border: 1px solid var(--border-color);
+  position: relative;
+  backdrop-filter: blur(10px);
+}
+
+.form-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Form Elements */
+button {
+  background-color: transparent;
+  color: var(--accent-primary);
+  border: 1px solid var(--accent-primary);
+  padding: 0.6em 1.2em;
+  border-radius: 2px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+button:hover {
+  background-color: var(--accent-primary);
+  color: var(--bg-primary);
+  box-shadow: 0 0 15px var(--accent-primary);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+input, textarea, select {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 2px;
+  padding: 0.5em 1em;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: var(--neon-glow) var(--accent-primary);
+}
+
+/* Links */
+a {
+  color: var(--accent-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: color-mix(in srgb, var(--accent-secondary) 85%, white);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .page-content {
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 1em;
+  }
+} 
