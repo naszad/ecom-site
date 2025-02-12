@@ -11,7 +11,8 @@ app.use(cors({
     origin: process.env.NODE_ENV === 'production' ? 'http://10.6.254.13:3000' : 'http://10.6.254.13:3000',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+    exposedHeaders: ['Set-Cookie'],
 }));
 app.use(express.json());
 app.use(cookieParser());

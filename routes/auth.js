@@ -44,10 +44,9 @@ router.post('/register', async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
+            sameSite: 'none',
             maxAge: 24 * 60 * 60 * 1000, // 24 hours
-            path: '/',
-            domain: process.env.NODE_ENV === 'production' ? '10.6.254.13' : 'localhost'
+            path: '/'
         });
 
         res.json({
@@ -100,10 +99,9 @@ router.post('/login', async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
+            sameSite: 'none',
             maxAge: 24 * 60 * 60 * 1000, // 24 hours
-            path: '/',
-            domain: process.env.NODE_ENV === 'production' ? '10.6.254.13' : 'localhost'
+            path: '/'
         });
 
         res.json({
