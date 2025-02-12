@@ -7,7 +7,7 @@ const { auth } = require('../middleware/auth');
 // Register
 router.post('/register', async (req, res) => {
     try {
-        const { email, password, first_name, last_name } = req.body;
+        const { email, password, name } = req.body;
 
         // Check if user exists
         const userExists = await pool.query(
@@ -25,8 +25,8 @@ router.post('/register', async (req, res) => {
 
         // Create user
         const newUser = await pool.query(
-            'INSERT INTO users (email, password, first_name, last_name) VALUES ($1, $2, $3, $4) RETURNING id, email, first_name, last_name, is_admin',
-            [email, hashedPassword, first_name, last_name]
+            'INSERT INTO users (email, password, name) VALUES ($1, $2, $3) RETURNING id, email, name, is_admin',
+            [email, hashedPassword, name]
         );
 
         // Create JWT
@@ -52,8 +52,7 @@ router.post('/register', async (req, res) => {
             user: {
                 id: newUser.rows[0].id,
                 email: newUser.rows[0].email,
-                first_name: newUser.rows[0].first_name,
-                last_name: newUser.rows[0].last_name,
+                name: newUser.rows[0].name,
                 is_admin: newUser.rows[0].is_admin
             }
         });
@@ -107,8 +106,7 @@ router.post('/login', async (req, res) => {
             user: {
                 id: user.rows[0].id,
                 email: user.rows[0].email,
-                first_name: user.rows[0].first_name,
-                last_name: user.rows[0].last_name,
+                name: user.rows[0].name,
                 is_admin: user.rows[0].is_admin
             }
         });
@@ -128,7 +126,7 @@ router.post('/logout', (req, res) => {
 router.get('/me', auth, async (req, res) => {
     try {
         const user = await pool.query(
-            'SELECT id, email, first_name, last_name, is_admin FROM users WHERE id = $1',
+            'SELECT id, email, name, is_admin FROM users WHERE id = $1',
             [req.user.id]
         );
 
