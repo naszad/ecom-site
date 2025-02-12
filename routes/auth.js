@@ -41,13 +41,7 @@ router.post('/register', async (req, res) => {
         );
 
         // Set cookie
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'none',
-            maxAge: 24 * 60 * 60 * 1000, // 24 hours
-            path: '/'
-        });
+        setCookie(res, token);
 
         res.json({
             user: {
@@ -96,13 +90,7 @@ router.post('/login', async (req, res) => {
         );
 
         // Set cookie
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'none',
-            maxAge: 24 * 60 * 60 * 1000, // 24 hours
-            path: '/'
-        });
+        setCookie(res, token);
 
         res.json({
             user: {
@@ -120,7 +108,12 @@ router.post('/login', async (req, res) => {
 
 // Logout
 router.post('/logout', (req, res) => {
-    res.clearCookie('token');
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'none',
+        path: '/'
+    });
     res.json({ message: 'Logged out successfully' });
 });
 
@@ -138,5 +131,40 @@ router.get('/me', auth, async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
+
+// Refresh token
+router.post('/refresh', auth, async (req, res) => {
+    try {
+        // Create new JWT
+        const token = jwt.sign(
+            { 
+                id: req.user.id,
+                email: req.user.email,
+                is_admin: req.user.is_admin
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        // Set cookie with new token
+        setCookie(res, token);
+
+        res.json({ message: 'Token refreshed successfully' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// Update cookie settings in login and register routes
+const setCookie = (res, token) => {
+    res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'none',
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        path: '/'
+    });
+};
 
 module.exports = router; 
