@@ -13,15 +13,30 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     checkAuth();
-  }, []);
+    // Set up token refresh interval
+    const refreshInterval = setInterval(() => {
+      if (user) {
+        refreshToken();
+      }
+    }, 23 * 60 * 60 * 1000); // Refresh every 23 hours
+
+    return () => clearInterval(refreshInterval);
+  }, [user]);
+
+  const refreshToken = async () => {
+    try {
+      await api.post('/auth/refresh');
+    } catch (err) {
+      console.error('Token refresh failed:', err);
+      setUser(null);
+    }
+  };
 
   const checkAuth = async () => {
     try {
       const response = await api.get('/auth/me');
       if (response.data.user) {
         setUser(response.data.user);
-        // Refresh token if needed
-        await api.post('/auth/refresh');
       }
     } catch (err) {
       setUser(null);
@@ -36,8 +51,6 @@ export function AuthProvider({ children }) {
       const response = await api.post('/auth/login', { email, password });
       if (response.data.user) {
         setUser(response.data.user);
-        // Verify token was set
-        await checkAuth();
       }
       return response.data;
     } catch (err) {
@@ -51,8 +64,6 @@ export function AuthProvider({ children }) {
       const response = await api.post('/auth/register', { name, email, password });
       if (response.data.user) {
         setUser(response.data.user);
-        // Verify token was set
-        await checkAuth();
       }
       return response.data;
     } catch (err) {
@@ -67,6 +78,8 @@ export function AuthProvider({ children }) {
       setUser(null);
     } catch (err) {
       console.error('Logout failed:', err);
+      // Still clear the user state even if the logout request fails
+      setUser(null);
       throw err;
     }
   };
@@ -77,6 +90,7 @@ export function AuthProvider({ children }) {
     login,
     register,
     logout,
+    checkAuth,
   };
 
   return (

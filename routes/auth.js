@@ -110,9 +110,10 @@ router.post('/login', async (req, res) => {
 router.post('/logout', (req, res) => {
     res.clearCookie('token', {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'none',
-        path: '/'
+        secure: true,
+        sameSite: 'strict',
+        path: '/',
+        domain: process.env.NODE_ENV === 'production' ? process.env.DOMAIN : 'localhost'
     });
     res.json({ message: 'Logged out successfully' });
 });
@@ -135,12 +136,22 @@ router.get('/me', auth, async (req, res) => {
 // Refresh token
 router.post('/refresh', auth, async (req, res) => {
     try {
+        // Get current user data
+        const user = await pool.query(
+            'SELECT id, email, is_admin FROM users WHERE id = $1',
+            [req.user.id]
+        );
+
+        if (user.rows.length === 0) {
+            return res.status(401).json({ error: 'User not found' });
+        }
+
         // Create new JWT
         const token = jwt.sign(
             { 
-                id: req.user.id,
-                email: req.user.email,
-                is_admin: req.user.is_admin
+                id: user.rows[0].id,
+                email: user.rows[0].email,
+                is_admin: user.rows[0].is_admin
             },
             process.env.JWT_SECRET,
             { expiresIn: '24h' }
@@ -160,10 +171,11 @@ router.post('/refresh', auth, async (req, res) => {
 const setCookie = (res, token) => {
     res.cookie('token', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'none',
+        secure: true, // Always use secure cookies
+        sameSite: 'strict',
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        path: '/'
+        path: '/',
+        domain: process.env.NODE_ENV === 'production' ? process.env.DOMAIN : 'localhost'
     });
 };
 
