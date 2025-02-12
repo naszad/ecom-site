@@ -108,12 +108,12 @@ router.post('/login', async (req, res) => {
 
 // Logout
 router.post('/logout', (req, res) => {
+    const isProduction = process.env.NODE_ENV === 'production';
     res.clearCookie('token', {
         httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
         path: '/',
-        domain: process.env.NODE_ENV === 'production' ? process.env.DOMAIN : 'localhost'
     });
     res.json({ message: 'Logged out successfully' });
 });
@@ -169,13 +169,13 @@ router.post('/refresh', auth, async (req, res) => {
 
 // Update cookie settings in login and register routes
 const setCookie = (res, token) => {
+    const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('token', token, {
         httpOnly: true,
-        secure: true, // Always use secure cookies
-        sameSite: 'strict',
+        secure: isProduction, // Only use secure in production
+        sameSite: isProduction ? 'none' : 'lax', // Use 'none' for cross-site in production
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
         path: '/',
-        domain: process.env.NODE_ENV === 'production' ? process.env.DOMAIN : 'localhost'
     });
 };
 
