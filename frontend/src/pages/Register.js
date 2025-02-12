@@ -14,7 +14,8 @@ import {
 
 function Register() {
   const [formData, setFormData] = useState({
-    name: '',
+    first_name: '',
+    last_name: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -42,7 +43,8 @@ function Register() {
     try {
       setError('');
       setLoading(true);
-      await register(formData.name, formData.email, formData.password);
+      const { confirmPassword, ...registrationData } = formData;
+      await register(registrationData);
       navigate('/');
     } catch (err) {
       setError('Failed to create an account');
@@ -96,13 +98,22 @@ function Register() {
           }}
         >
           <TextField
-            label="Full Name"
-            name="name"
-            value={formData.name}
+            label="First Name"
+            name="first_name"
+            value={formData.first_name}
             onChange={handleChange}
             required
             fullWidth
             autoFocus
+          />
+
+          <TextField
+            label="Last Name"
+            name="last_name"
+            value={formData.last_name}
+            onChange={handleChange}
+            required
+            fullWidth
           />
 
           <TextField
